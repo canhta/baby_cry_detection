@@ -14,10 +14,10 @@ cd baby_cry_detection
 source activate_env.sh
 
 # 3. Train model (after organizing your dataset)
-python cli.py train --model mobile --epochs 50
+python baby_cry.py train --model mobile --epochs 50
 
 # 4. Convert for mobile
-python cli.py convert --checkpoint models/checkpoints/best_mobilecnn_babycry.pth --model mobile
+python baby_cry.py convert --checkpoint models/checkpoints/best_mobilecnn_babycry.pth --model mobile
 
 # 5. Run mobile app
 cd mobile && flutter run
@@ -27,9 +27,9 @@ cd mobile && flutter run
 
 ```
 baby_cry_detection/
-├── ml-core/              # Python ML package
+├── ml_core/              # Python ML package
 ├── mobile/               # Flutter mobile app  
-├── cli.py               # Command-line interface
+├── baby_cry.py          # Command-line interface
 ├── pyproject.toml       # Python package definition
 └── setup.sh             # Development setup
 ```
@@ -52,14 +52,20 @@ baby_cry_detection/
 # Setup development environment
 ./setup.sh
 
+# Setup with demo data for immediate testing
+./setup.sh --demo-data
+
+# Clean setup (removes existing environment)
+./setup.sh --clean
+
 # Activate environment
 source activate_env.sh
 
 # Train model
-python train.py --model mobile --augment --epochs 100
+python baby_cry.py train --model mobile --epochs 50
 
 # Convert to TensorFlow Lite
-python convert_model.py --checkpoint [checkpoint_path] --model mobile --formats tflite
+python baby_cry.py convert --checkpoint models/checkpoints/best_mobilecnn_babycry.pth --model mobile
 
 # Mobile development
 cd mobile && flutter run
@@ -79,6 +85,11 @@ cd mobile && flutter run
 - Flutter 3.0+ (for mobile)
 - 4GB+ RAM
 - Audio dataset
+
+### 🖥️ Device Support
+- **Mac M1/M2**: Automatically uses MPS (Metal Performance Shaders) acceleration
+- **NVIDIA GPU**: CUDA acceleration when available
+- **CPU**: Universal fallback for all systems
 
 ## 📚 Documentation
 

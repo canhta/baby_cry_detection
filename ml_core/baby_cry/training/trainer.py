@@ -100,29 +100,38 @@ def train_model(model: nn.Module,
         val_correct = 0
         val_total = 0
         
-        with torch.no_grad():
-            val_pbar = tqdm(val_loader, desc=f'Epoch {epoch+1}/{epochs} [Val]')
-            for data, target in val_pbar:
-                data, target = data.to(device), target.squeeze().to(device)
-                output = model(data)
-                loss = criterion(output, target)
-                
-                val_loss += loss.item()
-                pred = output.argmax(dim=1)
-                val_correct += pred.eq(target).sum().item()
-                val_total += target.size(0)
-                
-                val_acc = 100. * val_correct / val_total
-                val_pbar.set_postfix({
-                    'Loss': f'{loss.item():.4f}',
-                    'Acc': f'{val_acc:.2f}%'
-                })
+        # Handle empty validation set
+        if len(val_loader) > 0:
+            with torch.no_grad():
+                val_pbar = tqdm(val_loader, desc=f'Epoch {epoch+1}/{epochs} [Val]')
+                for data, target in val_pbar:
+                    data, target = data.to(device), target.squeeze().to(device)
+                    output = model(data)
+                    loss = criterion(output, target)
+                    
+                    val_loss += loss.item()
+                    pred = output.argmax(dim=1)
+                    val_correct += pred.eq(target).sum().item()
+                    val_total += target.size(0)
+                    
+                    val_acc = 100. * val_correct / val_total
+                    val_pbar.set_postfix({
+                        'Loss': f'{loss.item():.4f}',
+                        'Acc': f'{val_acc:.2f}%'
+                    })
         
         # Calculate epoch metrics
         epoch_train_loss = train_loss / len(train_loader)
         epoch_train_acc = 100. * train_correct / train_total
-        epoch_val_loss = val_loss / len(val_loader)
-        epoch_val_acc = 100. * val_correct / val_total
+        
+        # Handle validation metrics for empty validation set
+        if len(val_loader) > 0:
+            epoch_val_loss = val_loss / len(val_loader)
+            epoch_val_acc = 100. * val_correct / val_total
+        else:
+            epoch_val_loss = epoch_train_loss  # Use training loss as fallback
+            epoch_val_acc = epoch_train_acc    # Use training acc as fallback
+            print("⚠️  No validation data available, using training metrics for validation")
         
         # Update learning rate
         scheduler.step(epoch_val_loss)
@@ -142,9 +151,10 @@ def train_model(model: nn.Module,
               f'Val Acc: {epoch_val_acc:.2f}% '
               f'LR: {current_lr:.2e}')
         
-        # Save best model
-        if epoch_val_acc > best_val_acc:
-            best_val_acc = epoch_val_acc
+        # Save best model (use validation acc if available, otherwise training acc)
+        current_metric = epoch_val_acc if len(val_loader) > 0 else epoch_train_acc
+        if current_metric > best_val_acc:
+            best_val_acc = current_metric
             patience_counter = 0
             
             # Save model checkpoint

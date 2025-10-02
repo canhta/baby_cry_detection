@@ -34,7 +34,7 @@ def main():
     parser.add_argument('--lr', type=float, default=0.001,
                        help='Learning rate')
     parser.add_argument('--device', type=str, default='auto',
-                       choices=['auto', 'cuda', 'cpu'],
+                       choices=['auto', 'cuda', 'mps', 'cpu'],
                        help='Device to use for training')
     parser.add_argument('--save-dir', type=str, default='./models/checkpoints',
                        help='Directory to save model checkpoints')
@@ -45,9 +45,14 @@ def main():
     
     args = parser.parse_args()
     
-    # Set device
+    # Set device with proper Mac M1 support
     if args.device == 'auto':
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        if torch.cuda.is_available():
+            device = 'cuda'
+        elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
+            device = 'mps'
+        else:
+            device = 'cpu'
     else:
         device = args.device
     
@@ -85,11 +90,12 @@ def main():
     train_dataset = BabyCryDataset(train_paths, train_labels, augment=args.augment)
     val_dataset = BabyCryDataset(val_paths, val_labels, augment=False)
     
-    # Create data loaders
+    # Create data loaders (disable pin_memory for MPS to avoid warnings)
+    pin_memory = device != 'mps'
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, 
-                             shuffle=True, num_workers=4, pin_memory=True)
+                             shuffle=True, num_workers=4, pin_memory=pin_memory)
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size, 
-                           shuffle=False, num_workers=4, pin_memory=True)
+                           shuffle=False, num_workers=4, pin_memory=pin_memory)
     
     # Initialize model
     print("🧠 Initializing model...")
