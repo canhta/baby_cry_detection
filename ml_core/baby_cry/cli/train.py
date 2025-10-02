@@ -15,7 +15,6 @@ from pathlib import Path
 
 from baby_cry.models.mobile_model import MobileCNN_BabyCry
 from baby_cry.models.cnn_model import CNN_BabyCry
-from baby_cry.models.lstm_model import LSTM_BabyCry
 from baby_cry.models.crnn_model import CRNN_BabyCry
 from baby_cry.data.dataset import BabyCryDataset, load_dataset
 from baby_cry.training.trainer import train_model, validate_model
@@ -24,7 +23,7 @@ from baby_cry.utils.model_utils import print_model_summary, count_parameters
 def main():
     parser = argparse.ArgumentParser(description='Train Baby Cry Detection Model')
     parser.add_argument('--model', type=str, default='mobile', 
-                       choices=['mobile', 'cnn', 'lstm', 'crnn'],
+                       choices=['mobile', 'cnn', 'crnn'],
                        help='Model architecture to train')
     parser.add_argument('--data-dir', type=str, default='./data',
                        help='Path to dataset directory')
@@ -98,8 +97,6 @@ def main():
         model = MobileCNN_BabyCry(n_classes=len(classes))
     elif args.model == 'cnn':
         model = CNN_BabyCry(n_classes=len(classes))
-    elif args.model == 'lstm':
-        model = LSTM_BabyCry(n_classes=len(classes))
     elif args.model == 'crnn':
         model = CRNN_BabyCry(n_classes=len(classes))
     

@@ -79,10 +79,9 @@ mkdir -p data/test/{hunger,pain,discomfort,tired,normal}
 echo -e "${BLUE}📊 Dataset Setup${NC}"
 echo "Available datasets:"
 echo "1. ICSD (Recommended) - 10,000+ samples"
-echo "2. Donate A Cry - 457 samples"
-echo "3. Skip dataset download"
+echo "2. Skip dataset download"
 
-read -p "Choose dataset to download (1-3): " -n 1 -r dataset_choice
+read -p "Choose dataset to download (1-2): " -n 1 -r dataset_choice
 echo
 
 case $dataset_choice in
@@ -97,15 +96,6 @@ case $dataset_choice in
         fi
         ;;
     2)
-        echo -e "${BLUE}📥 Downloading Donate A Cry dataset...${NC}"
-        if command -v git &> /dev/null; then
-            git clone https://github.com/gveres/donateacry-corpus.git data/raw/donateacry
-            echo -e "${GREEN}✅ Donate A Cry dataset downloaded${NC}"
-        else
-            echo -e "${RED}❌ Git is required to download datasets${NC}"
-        fi
-        ;;
-    3)
         echo -e "${YELLOW}⏭️  Skipping dataset download${NC}"
         ;;
     *)

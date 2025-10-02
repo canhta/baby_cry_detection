@@ -8,7 +8,6 @@ __author__ = "Baby Cry Detection Team"
 
 from .models.mobile_model import MobileCNN_BabyCry, MobileAudioProcessor, MobileBabyCryPredictor
 from .models.cnn_model import CNN_BabyCry
-from .models.lstm_model import LSTM_BabyCry
 from .models.crnn_model import CRNN_BabyCry
 from .data.dataset import BabyCryDataset
 from .training.trainer import train_model
@@ -19,7 +18,6 @@ __all__ = [
     "MobileAudioProcessor", 
     "MobileBabyCryPredictor",
     "CNN_BabyCry",
-    "LSTM_BabyCry", 
     "CRNN_BabyCry",
     "BabyCryDataset",
     "train_model",

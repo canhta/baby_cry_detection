@@ -24,10 +24,10 @@ dependencies = [
 ]
 
 [project.scripts]
-baby-cry = "baby_cry_detection.cli.main:main"
+baby-cry = "baby_cry:main"
 
 [project.optional-dependencies]
 dev = ["black", "flake8", "pytest-cov"]
 
 [tool.setuptools.packages.find]
-where = ["ml-core"]
+where = ["ml_core"]

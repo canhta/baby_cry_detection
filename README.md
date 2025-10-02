@@ -40,13 +40,11 @@ baby_cry_detection/
 |-------|------|----------|-------|----------|
 | **MobileCNN** | 2MB | 92-95% | 10-50ms | **Production** ✅ |
 | CNN | 10MB | 95% | 50-100ms | Server |
-| LSTM | 15MB | 87% | 100-200ms | Research |
 | CRNN | 20MB | 90-95% | 200-300ms | High accuracy |
 
 ## 📊 Supported Datasets
 
 - **ICSD** - 10,000+ samples (Recommended)
-- **Donate A Cry** - 457 samples
 
 ## 🛠️ Development
 

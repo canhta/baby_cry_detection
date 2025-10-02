@@ -14,7 +14,6 @@ import numpy as np
 
 from baby_cry.models.mobile_model import MobileCNN_BabyCry
 from baby_cry.models.cnn_model import CNN_BabyCry
-from baby_cry.models.lstm_model import LSTM_BabyCry
 from baby_cry.models.crnn_model import CRNN_BabyCry
 from baby_cry.utils.model_utils import convert_to_onnx, get_model_size_mb
 
@@ -65,7 +64,7 @@ def main():
     parser.add_argument('--checkpoint', type=str, required=True,
                        help='Path to PyTorch model checkpoint')
     parser.add_argument('--model', type=str, required=True,
-                       choices=['mobile', 'cnn', 'lstm', 'crnn'],
+                       choices=['mobile', 'cnn', 'crnn'],
                        help='Model architecture')
     parser.add_argument('--output-dir', type=str, default='./models/mobile',
                        help='Output directory for converted models')
@@ -94,8 +93,6 @@ def main():
         model = MobileCNN_BabyCry(n_classes=5)
     elif args.model == 'cnn':
         model = CNN_BabyCry(n_classes=5)
-    elif args.model == 'lstm':
-        model = LSTM_BabyCry(n_classes=5)
     elif args.model == 'crnn':
         model = CRNN_BabyCry(n_classes=5)
     
